@@ -3,7 +3,8 @@
 Restful news.ycombinator.com API written in Coffeescript for node.js.
 
 ## Required Modules
-node.js modules: express, jsdom
+### express
+### jsdom
 
 ## Examples
 get frontpage: http://localhost:1337/news
