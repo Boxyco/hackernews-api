@@ -10,7 +10,7 @@ Restful news.ycombinator.com API written in Coffeescript for node.js.
 
 
 ## Developers
-**node.js dependencies**
+####node.js dependencies
 + Our script depends on jsdom and express. To install, just run the following commands in npm:
 
 ```
