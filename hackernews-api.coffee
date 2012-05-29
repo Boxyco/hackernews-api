@@ -4,7 +4,7 @@
  * hackernews-api.js v0.1
  * Eric E. Lewis
  * http://ericlewis.github.com
- * requires: express, jsdom, and jQuery 1.7+
+ * requires: node, express, jsdom, and jQuery 1.7+
  * ===================================================
  * Copyright 2012 boxyco, LLC.
  *
