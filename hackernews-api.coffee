@@ -109,8 +109,8 @@ api.get '/user/:id?', (req,res) ->
 		   
 		    profile = $('form tr td:odd')
 
-		    result = 
-				username : profile.get(0).innerHTML
+		    result =
+		    	username : profile.get(0).innerHTML
 				created  : profile.get(1).innerHTML
 				karma    : profile.get(2).innerHTML
 				average  : profile.get(3).innerHTML
