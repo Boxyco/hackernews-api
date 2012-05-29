@@ -5,6 +5,19 @@ Restful news.ycombinator.com API written in Coffeescript for node.js.
 ## Required Files
 Modules: *express* & *jsdom*, Files: *jquery 1.6+*
 
+## Developers
+We have included a makefile with convenience methods for working with the Bootstrap library.
+
++ **dependencies** 
+Our script depends on jsdom and express. To install, just run the following commands in npm:
+```
+$ npm install express
+```
+
+```
+$ npm install jsdom
+```
+
 ## Examples
 get frontpage: http://localhost:1337/news
 
