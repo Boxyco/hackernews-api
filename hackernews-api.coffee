@@ -23,11 +23,11 @@
 ###
 
 # config(ish), port to bind to
-listen_port   = 1337
+listen_port = 1337
+jquery_url  = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
 
 # ------- required files
 jsdom  = require 'jsdom' 
-jquery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
 api    = require('express').createServer()
 
 # ------- reused functions
@@ -55,7 +55,7 @@ api.get '/news/:page?', (req,res) ->
  # scrap the page now!
  jsdom.env 
    html: html,
-   scripts:  [ jquery ]
+   scripts:  [ jquery_url ]
    done: (errors, window) ->
     # scrape the links with jquery
     $ = window.$
@@ -101,7 +101,7 @@ api.get '/user/:id?', (req,res) ->
 	 # scrape the page now!
 	 jsdom.env 
 	   html: html + userid,
-	   scripts:  [ jquery ]
+	   scripts:  [ jquery_url ]
 	   done: (errors, window) ->
 		    # scrape the links with jquery
 		    $ = window.$
@@ -136,7 +136,7 @@ api.get '/user/:id/submissions?', (req,res) ->
 	 # scrape the page now!
 	 jsdom.env 
 	   html: html + userid,
-	   scripts:  [ jquery ]
+	   scripts:  [ jquery_url ]
 	   done: (errors, window) ->
 		    # scrape the links with jquery
 		    $ = window.$
