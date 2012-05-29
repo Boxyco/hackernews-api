@@ -14,6 +14,13 @@ get user profile: http://localhost:1337/user/username
 
 get user submissions: http://localhost:1337/user/username/submissions
 
+## Author(s)
+
+**Eric Lewis**
+
++ http://twitter.com/ericlewis
++ http://github.com/ericlewis
+
 ## Copyright and license
 Copyright 2012 boxyco, LLC.
 
