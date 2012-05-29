@@ -8,6 +8,7 @@ Modules: *express* & *jsdom*, Files: *jquery 1.6+*
 ## Developers
 + **dependencies** 
 Our script depends on jsdom and express. To install, just run the following commands in npm:
+
 ```
 $ npm install express
 ```
