@@ -22,7 +22,7 @@
  * ==========================================================
 ###
 
-# config(ish), port to bind to
+# config(ish), port to bind to, jquery cdn url
 listen_port = 1337
 jquery_url  = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
 
