@@ -28,7 +28,7 @@ jquery_path = './'
 
 # ------- required files
 jsdom  = require 'jsdom' 
-jquery = require('fs').readFileSync(jquery_path + "jquery-1.7.2.min.js").toString()
+jquery = require('fs').readFileSync(jquery_path + "jquery.js").toString()
 api    = require('express').createServer()
 
 # ------- reused functions
