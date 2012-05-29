@@ -15,13 +15,10 @@ $ npm install jsdom
 ```
 
 ## Examples
-get frontpage: http://localhost:1337/news
-
-get next page: http://localhost:1337/news/pageid
-
-get user profile: http://localhost:1337/user/username
-
-get user submissions: http://localhost:1337/user/username/submissions
++ frontpage: http://localhost:1337/news
++ next page: http://localhost:1337/news/pageid
++ user profile: http://localhost:1337/user/username
++ user submissions: http://localhost:1337/user/username/submissions
 
 ## Author(s)
 
