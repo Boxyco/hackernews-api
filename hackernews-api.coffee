@@ -22,13 +22,12 @@
  * ==========================================================
 ###
 
-# config(ish), port to bind to, absolute or relative path to jquery file
+# config(ish), port to bind to
 listen_port   = 1337
-jquery_path   = './'
 
 # ------- required files
 jsdom  = require 'jsdom' 
-jquery = require('fs').readFileSync(jquery_path + "jquery.js").toString()
+jquery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
 api    = require('express').createServer()
 
 # ------- reused functions
@@ -56,7 +55,7 @@ api.get '/news/:page?', (req,res) ->
  # scrap the page now!
  jsdom.env 
    html: html,
-   src:  [ jquery ]
+   scripts:  [ jquery ]
    done: (errors, window) ->
     # scrape the links with jquery
     $ = window.$
@@ -102,7 +101,7 @@ api.get '/user/:id?', (req,res) ->
 	 # scrape the page now!
 	 jsdom.env 
 	   html: html + userid,
-	   src:  [ jquery ]
+	   scripts:  [ jquery ]
 	   done: (errors, window) ->
 		    # scrape the links with jquery
 		    $ = window.$
@@ -137,7 +136,7 @@ api.get '/user/:id/submissions?', (req,res) ->
 	 # scrape the page now!
 	 jsdom.env 
 	   html: html + userid,
-	   src:  [ jquery ]
+	   scripts:  [ jquery ]
 	   done: (errors, window) ->
 		    # scrape the links with jquery
 		    $ = window.$
