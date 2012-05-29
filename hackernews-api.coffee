@@ -166,7 +166,6 @@ api.get '/user/:id/submissions?', (req,res) ->
 		      links : links,
 		      next  : if nextPageLink == 'news2' then nextPageLink else nextPageLink.split("=")[1]
 		    
-		    
 		    return
 	
 	 
@@ -174,7 +173,6 @@ api.get '/user/:id/submissions?', (req,res) ->
   res.send JSON.stringify error: 'no userid specified' 
   
  return
-
 
 api.listen listen_port 
 log 'hackernews api running on port ' + listen_port 
