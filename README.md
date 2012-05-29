@@ -1,3 +1,4 @@
-Hackernews API - Node.js
+Hackernews API
 
-Written in Coffeescript, requires nodejs modules: express, jsdom
+Restful news.ycombinator.com API written in Coffeescript for node.js. 
+requires node.js modules: express, jsdom
