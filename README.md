@@ -2,6 +2,13 @@
 
 Restful news.ycombinator.com API written in Coffeescript for node.js.
 
+## Examples
++ frontpage: http://localhost:1337/news
++ next page: http://localhost:1337/news/pageid
++ user profile: http://localhost:1337/user/username
++ user submissions: http://localhost:1337/user/username/submissions
+
+
 ## Developers
 + **node.js dependencies** 
 Our script depends on jsdom and express. To install, just run the following commands in npm:
@@ -13,12 +20,6 @@ $ npm install express
 ```
 $ npm install jsdom
 ```
-
-## Examples
-+ frontpage: http://localhost:1337/news
-+ next page: http://localhost:1337/news/pageid
-+ user profile: http://localhost:1337/user/username
-+ user submissions: http://localhost:1337/user/username/submissions
 
 ## Author(s)
 
