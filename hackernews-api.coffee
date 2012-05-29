@@ -24,7 +24,7 @@
 
 # config(ish), port to bind to, absolute or relative path to jquery file
 listen_port   = 1337
-jquery_path = './'
+jquery_path   = './'
 
 # ------- required files
 jsdom  = require 'jsdom' 
