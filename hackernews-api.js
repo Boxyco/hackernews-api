@@ -140,9 +140,29 @@ api.get('/user/:id/submissions?', function(req, res) {
 });
 
 api.get('/user/:id/comments', function(req, res) {
-  res.json({
-    msg: 'just a holder'
+  var html, userid;
+  html = 'http://news.ycombinator.com/threads?id=';
+  userid = req.params.id;
+  jsdom.env({
+    html: html + userid,
+    scripts: [jquery_url],
+    done: function(errors, window) {
+      var $, comments;
+      $ = window.$;
+      comments = [];
+      $('td .default > span').each(function() {
+        comments[comments.length] = {
+          text: $(this).text(),
+          indent: $(this).parent().prev().prev().children('img').attr('width') / 40,
+          postedby: $(this).parent().children('div').children('span').children('a:eq(0)').text()
+        };
+      });
+      res.json({
+        comments: comments
+      });
+    }
   });
+  return;
 });
 
 api.listen(listen_port);
