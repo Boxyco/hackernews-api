@@ -92,12 +92,11 @@ api.get('/news/:page?', function(req, res) {
 });
 
 api.get('/user/:id?', function(req, res) {
-  var html, userid;
-  html = 'http://news.ycombinator.com/user?id=';
+  var userid;
   userid = req.params.id;
   if (userid !== void 0) {
     jsdom.env({
-      html: html + userid,
+      html: 'http://news.ycombinator.com/user?id=' + userid,
       scripts: [jquery_url],
       done: function(errors, window) {
         var $, profile;
@@ -120,12 +119,11 @@ api.get('/user/:id?', function(req, res) {
 });
 
 api.get('/user/:id/submissions?', function(req, res) {
-  var html, userid;
-  html = 'http://news.ycombinator.com/submitted?id=';
+  var userid;
   userid = req.params.id;
   if (userid !== void 0) {
     jsdom.env({
-      html: html + userid,
+      html: 'http://news.ycombinator.com/submitted?id=' + userid,
       scripts: [jquery_url],
       done: function(errors, window) {
         pageScraper(req, res, errors, window);
