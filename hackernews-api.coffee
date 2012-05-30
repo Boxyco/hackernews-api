@@ -119,7 +119,7 @@ api.get '/news/:page?', (req,res) ->
  return
  
 # ------- get post comments by discuss id
-api.get '/news/:id/comments', (req,res) ->
+api.get '/discuss/:id?', (req,res) ->
  # set the url to be scrap, add the id if provided
  html  = 'http://news.ycombinator.com/item?id='
  userid  = req.params.id
