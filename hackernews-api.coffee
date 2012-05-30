@@ -98,14 +98,13 @@ api.get '/news/:page?', (req,res) ->
 api.get '/user/:id?', (req,res) -> 
  
  # set the url to be scraped, add the id if provided
- html = 'http://news.ycombinator.com/user?id='
  userid = req.params.id
 
  if userid != undefined
 
 	 # scrape the page now!
 	 jsdom.env 
-	   html: html + userid,
+	   html: 'http://news.ycombinator.com/user?id=' + userid,
 	   scripts:  [ jquery_url ]
 	   done: (errors, window) ->
 		    # scrape the links with jquery
@@ -133,14 +132,13 @@ api.get '/user/:id?', (req,res) ->
 api.get '/user/:id/submissions?', (req,res) ->
  
  # set the url to be scraped, add the id if provided
- html   = 'http://news.ycombinator.com/submitted?id='
  userid = req.params.id
 
  if userid != undefined
 
 	 # scrape the page now!
 	 jsdom.env 
-	   html: html + userid,
+	   html: 'http://news.ycombinator.com/submitted?id=' + userid,
 	   scripts:  [ jquery_url ]
 	   done: (errors, window) ->
    			pageScraper(req, res, errors, window)
