@@ -1,4 +1,4 @@
-# Hackernews API
+# Hacker News API
 
 Restful news.ycombinator.com API written in Coffeescript for node.js, utilizing jQuery, JsDOM, and express. Very much a weekend project, started on Friday May 24th.
 
