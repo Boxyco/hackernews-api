@@ -9,6 +9,7 @@ http://hnapi.boxy.co:1337
 + next page: http://localhost:1337/news/pageid
 + user profile: http://localhost:1337/user/username
 + user submissions: http://localhost:1337/user/username/submissions
++ user comments: http://localhost:1337/user/username/comments
 
 
 ## Developers
