@@ -139,6 +139,12 @@ api.get('/user/:id/submissions?', function(req, res) {
   }
 });
 
+api.get('/user/:id/comments', function(req, res) {
+  res.json({
+    msg: 'just a holder'
+  });
+});
+
 api.listen(listen_port);
 
 log('hackernews api running on port ' + listen_port);
