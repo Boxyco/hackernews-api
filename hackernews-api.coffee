@@ -152,7 +152,21 @@ api.get '/user/:id/submissions?', (req,res) ->
  return
  
 api.get '/user/:id/comments', (req,res) ->
- res.json msg: 'just a holder'
+ # set the url to be scrap, add the id if provided
+ html  = 'http://news.ycombinator.com/threads?id='
+ userid  = req.params.id
+ 
+ # scrap the page now!
+ jsdom.env 
+   html: html + userid,
+   scripts:  [ jquery_url ]
+   done: (errors, window) ->
+    $('td .default > span').each ->
+    	console.log($(this).text())
+    	return
+    return
+   				
+ return
  
  return
 
