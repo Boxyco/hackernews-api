@@ -20,7 +20,7 @@
  * ==========================================================
 */
 
-var api, jquery_url, jsdom, listen_port, log, pageScraper;
+var api, commentScraper, jquery_url, jsdom, listen_port, log, pageScraper;
 
 listen_port = process.argv[2] === void 0 ? 1337 : process.argv[2].substring(2);
 
@@ -49,7 +49,7 @@ pageScraper = function(req, res, errors, window) {
       subtitle: itemSubText.text(),
       postedby: itemSubText.children('a:eq(0)').text(),
       site: itemLinkText !== '' ? itemLinkText : '(Hacker News)',
-      discuss: 'http://news.ycombinator.com/' + itemSubText.children('a:eq(1)').attr('href')
+      discuss: itemSubText.children('a:eq(1)').attr('href').substring(8)
     };
   });
   nextPageLink = $('td.title:last a').attr('href');
@@ -65,6 +65,32 @@ pageScraper = function(req, res, errors, window) {
       }
     })()
   });
+};
+
+commentScraper = function(req, res, errors, window) {
+  var $, comments, html, userid;
+  html = 'http://news.ycombinator.com/threads?id=';
+  userid = req.params.id;
+  jsdom.env;
+  ({
+    html: html + userid,
+    scripts: [jquery_url],
+    done: function(errors, window) {}
+  });
+  $ = window.$;
+  comments = [];
+  $('td .default > span').each(function() {
+    comments[comments.length] = {
+      text: $(this).text(),
+      indent: $(this).parent().prev().prev().children('img').attr('width') / 40,
+      postedby: $(this).parent().children('div').children('span').children('a:eq(0)').text(),
+      posttime: $(this).parent().children('div').children('span').children('a').remove() && $('td .default > span').parent().children('div').children('span').text().substring(0, 14).trim()
+    };
+  });
+  res.json({
+    comments: comments
+  });
+  return;
 };
 
 api.get('/', function(req, res) {
@@ -86,6 +112,19 @@ api.get('/news/:page?', function(req, res) {
     scripts: [jquery_url],
     done: function(errors, window) {
       pageScraper(req, res, errors, window);
+    }
+  });
+});
+
+api.get('/news/:id/comments', function(req, res) {
+  var html, userid;
+  html = 'http://news.ycombinator.com/item?id=';
+  userid = req.params.id;
+  jsdom.env({
+    html: html + userid,
+    scripts: [jquery_url],
+    done: function(errors, window) {
+      commentScraper(req, res, errors, window);
     }
   });
 });
@@ -147,22 +186,9 @@ api.get('/user/:id/comments', function(req, res) {
     html: html + userid,
     scripts: [jquery_url],
     done: function(errors, window) {
-      var $, comments;
-      $ = window.$;
-      comments = [];
-      $('td .default > span').each(function() {
-        comments[comments.length] = {
-          text: $(this).text(),
-          indent: $(this).parent().prev().prev().children('img').attr('width') / 40,
-          postedby: $(this).parent().children('div').children('span').children('a:eq(0)').text()
-        };
-      });
-      res.json({
-        comments: comments
-      });
+      commentScraper(req, res, errors, window);
     }
   });
-  return;
 });
 
 api.listen(listen_port);
