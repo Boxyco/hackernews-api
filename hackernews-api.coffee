@@ -81,7 +81,10 @@ api.get '/news/:page?', (req,res) ->
     	
     res.send JSON.stringify 
       links : links,
-      next  : if nextPageLink == 'news2' then nextPageLink else nextPageLink.split("=")[1]
+      next  : if nextPageLink == 'news2' then nextPageLink else 
+              try
+               nextPageLink.split("=")[1]
+               true
     
     return
 	
@@ -162,7 +165,10 @@ api.get '/user/:id/submissions?', (req,res) ->
 		
 		    res.send JSON.stringify 
 		      links : links,
-		      next  : if nextPageLink == 'news2' then nextPageLink else nextPageLink.split("=")[1]
+		      next  : if nextPageLink == 'news2' then nextPageLink else 
+		              try
+		               nextPageLink.split("=")[1]
+		               true
 		    
 		    return
 	
