@@ -50,7 +50,7 @@ pageScraper = (req, res, errors, window) ->
         subtitle : itemSubText.text()
         postedby : itemSubText.children('a:eq(0)').text()
         site     : if itemLinkText != '' then itemLinkText else '(Hacker News)'
-        discuss  : 'http://news.ycombinator.com/' + itemSubText.children('a:eq(1)').attr 'href'
+        discuss  : itemSubText.children('a:eq(1)').attr('href').substring 8
 
       return
     
@@ -65,6 +65,32 @@ pageScraper = (req, res, errors, window) ->
                nextPageLink.split("=")[1]
     
     return
+
+commentScraper = (req, res, errors, window) ->
+	# set the url to be scrap, add the id if provided
+	html  = 'http://news.ycombinator.com/threads?id='
+	userid  = req.params.id
+	
+	# scrap the page now!
+	jsdom.env 
+	html: html + userid,
+	scripts:  [ jquery_url ]
+	done: (errors, window) ->
+	$ = window.$
+	comments = []
+	
+	$('td .default > span').each ->
+		comments[comments.length] = 
+			text     : $(this).text()
+			indent   : $(this).parent().prev().prev().children('img').attr('width') / 40
+			postedby : $(this).parent().children('div').children('span').children('a:eq(0)').text()
+			posttime : $(this).parent().children('div').children('span').children('a').remove() and $('td .default > span').parent().children('div').children('span').text().substring(0,14).trim()
+		return
+	
+	res.json comments: comments
+	return
+					
+	return
 
 # ------- redirect / to news
 api.get '/', (req,res) -> 
@@ -87,9 +113,25 @@ api.get '/news/:page?', (req,res) ->
    html: html,
    scripts:  [ jquery_url ]
    done: (errors, window) ->
-   			pageScraper(req, res, errors, window)
+   			pageScraper req, res, errors, window
    			return
 	
+ return
+ 
+# ------- get post comments by discuss id
+api.get '/news/:id/comments', (req,res) ->
+ # set the url to be scrap, add the id if provided
+ html  = 'http://news.ycombinator.com/item?id='
+ userid  = req.params.id
+ 
+ # scrap the page now!
+ jsdom.env 
+   html: html + userid,
+   scripts:  [ jquery_url ]
+   done: (errors, window) ->
+    commentScraper req, res, errors, window
+    return
+   				
  return
 
 
@@ -128,7 +170,7 @@ api.get '/user/:id?', (req,res) ->
  return
 
 
-# ------- get user submissions by id
+# ------- get user submissions by user id
 api.get '/user/:id/submissions?', (req,res) ->
  
  # set the url to be scraped, add the id if provided
@@ -142,7 +184,7 @@ api.get '/user/:id/submissions?', (req,res) ->
 	   html: html + userid,
 	   scripts:  [ jquery_url ]
 	   done: (errors, window) ->
-   			pageScraper(req, res, errors, window)
+   			pageScraper req, res, errors, window
    			return
 	
 	 
@@ -151,6 +193,7 @@ api.get '/user/:id/submissions?', (req,res) ->
   
  return
  
+# ------- get user comments by user id
 api.get '/user/:id/comments', (req,res) ->
  # set the url to be scrap, add the id if provided
  html  = 'http://news.ycombinator.com/threads?id='
@@ -161,23 +204,11 @@ api.get '/user/:id/comments', (req,res) ->
    html: html + userid,
    scripts:  [ jquery_url ]
    done: (errors, window) ->
-    $ = window.$
-    comments = []
-    
-    $('td .default > span').each ->
-    	comments[comments.length] = 
-    		text     : $(this).text()
-    		indent   : $(this).parent().prev().prev().children('img').attr('width') / 40
-    		postedby : $(this).parent().children('div').children('span').children('a:eq(0)').text()
-    	return
-    
-    res.json comments: comments
+    commentScraper req, res, errors, window
     return
    				
  return
  
- return
-
 # bind the server to the port!
 api.listen listen_port 
 log 'hackernews api running on port ' + listen_port 
