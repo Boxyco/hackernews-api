@@ -1,9 +1,9 @@
 
 ###
  * ==========================================================
- * hackernews-api.js v0.1
- * Eric E. Lewis
- * http://www.boxy.co
+ * Name:    hackernews-api.js v0.1
+ * Author:  Eric E. Lewis
+ * Website: http://www.boxy.co
  * ===================================================
  * Copyright 2012 boxyco, LLC.
  *
