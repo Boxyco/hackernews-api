@@ -45,12 +45,12 @@ pageScraper = (req, res, errors, window) ->
       itemLinkText    = item.next().text().trim()
 
       links[links.length] =
-        href     : if itemLinkText != '' then item.attr('href') else 'http://news.ycombinator.com/' + item.attr 'href'
-        title    : item.text()
-        subtitle : itemSubText.text()
-        postedby : itemSubText.children('a:eq(0)').text()
-        site     : if itemLinkText != '' then itemLinkText else '(Hacker News)'
-        discuss  : itemSubText.children('a:eq(1)').attr('href').substring 8
+        href       : if itemLinkText != '' then item.attr('href') else 'http://news.ycombinator.com/' + item.attr 'href'
+        title      : item.text()
+        subtitle   : itemSubText.text()
+        postedby   : itemSubText.children('a:eq(0)').text()
+        site       : if itemLinkText != '' then itemLinkText else '(Hacker News)'
+        discussid  : itemSubText.children('a:eq(1)').attr('href').substring 8
 
       return
     
@@ -130,6 +130,41 @@ api.get '/news/:id/comments', (req,res) ->
    scripts:  [ jquery_url ]
    done: (errors, window) ->
     commentScraper req, res, errors, window
+    return
+   				
+ return
+ 
+# ------- get news, and get news by pageid
+api.get '/news/:page?', (req,res) -> 
+ 
+ # set the url to be scrap, add the id if provided
+ html  = 'http://news.ycombinator.com/'
+ page  = req.params.page
+ 
+ html += 'x?fnid=' if page != undefined and page != 'news2'
+ html += page if page != undefined
+ 
+ # scrap the page now!
+ jsdom.env 
+   html: html,
+   scripts:  [ jquery_url ]
+   done: (errors, window) ->
+   			pageScraper req, res, errors, window
+   			return
+	
+ return
+ 
+# ------- get ask HN news
+api.get '/ask', (req,res) ->
+ # set the url to be scrap, add the id if provided
+ html  = 'http://news.ycombinator.com/ask'
+ 
+ # scrap the page now!
+ jsdom.env 
+   html: html,
+   scripts:  [ jquery_url ]
+   done: (errors, window) ->
+    pageScraper req, res, errors, window
     return
    				
  return

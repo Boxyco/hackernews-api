@@ -116,15 +116,34 @@ api.get('/news/:page?', function(req, res) {
   });
 });
 
-api.get('/news/:id/comments', function(req, res) {
-  var html, userid;
-  html = 'http://news.ycombinator.com/item?id=';
-  userid = req.params.id;
+api.get('/news/:page?', function(req, res) {
+  var html, page;
+  html = 'http://news.ycombinator.com/';
+  page = req.params.page;
+  if (page !== void 0 && page !== 'news2') {
+    html += 'x?fnid=';
+  }
+  if (page !== void 0) {
+    html += page;
+  }
   jsdom.env({
-    html: html + userid,
+    html: html,
     scripts: [jquery_url],
     done: function(errors, window) {
-      commentScraper(req, res, errors, window);
+      pageScraper(req, res, errors, window);
+    }
+  });
+});
+
+api.get('/news/ask', function(req, res) {
+  var html;
+  html = 'http://news.ycombinator.com/ask';
+  userid = req.params.id;
+  jsdom.env({
+    html: html,
+    scripts: [jquery_url],
+    done: function(errors, window) {
+      pageScraper(req, res, errors, window);
     }
   });
 });
