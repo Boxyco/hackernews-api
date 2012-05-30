@@ -3,7 +3,7 @@
 Restful news.ycombinator.com API written in Coffeescript for node.js, utilizing jQuery, JsDOM, and express. Very much a weekend project, started on Friday May 24th.
 
 ####live demo url:
-(http://hnapi.boxy.co:1337)http://hnapi.boxy.co:1337
+http://hnapi.boxy.co:1337
 
 ## Examples
 + frontpage: http://localhost:1337/news
