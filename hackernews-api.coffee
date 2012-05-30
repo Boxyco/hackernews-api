@@ -111,14 +111,14 @@ api.get '/user/:id?', (req,res) ->
 		    $ = window.$
 		   
 		    profile = $('form tr td:odd')
-
-		    res.json
-		    	username : profile.get(0).innerHTML
-		    	created  : profile.get(1).innerHTML
-		    	karma    : profile.get(2).innerHTML
-		    	average  : profile.get(3).innerHTML
-		    	about    : profile.get(4).innerHTML
-	
+		    try
+			    res.json
+			    	username : profile.get(0).innerHTML
+			    	created  : profile.get(1).innerHTML
+			    	karma    : profile.get(2).innerHTML
+			    	average  : profile.get(3).innerHTML
+			    	about    : profile.get(4).innerHTML
+			    	
 		    return
 	
 	 
