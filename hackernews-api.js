@@ -53,19 +53,18 @@ pageScraper = function(req, res, errors, window) {
     };
   });
   nextPageLink = $('td.title:last a').attr('href');
-  res.send(JSON.stringify({
+  res.json({
     links: links,
     next: (function() {
       if (nextPageLink === 'news2') {
         return nextPageLink;
       } else {
         try {
-          nextPageLink.split("=")[1];
-          return true;
+          return nextPageLink.split("=")[1];
         } catch (_error) {}
       }
     })()
-  }));
+  });
 };
 
 api.get('/', function(req, res) {
@@ -92,47 +91,51 @@ api.get('/news/:page?', function(req, res) {
 });
 
 api.get('/user/:id?', function(req, res) {
-  var userid;
+  var html, userid;
+  html = 'http://news.ycombinator.com/user?id=';
   userid = req.params.id;
   if (userid !== void 0) {
     jsdom.env({
-      html: 'http://news.ycombinator.com/user?id=' + userid,
+      html: html + userid,
       scripts: [jquery_url],
       done: function(errors, window) {
         var $, profile;
         $ = window.$;
         profile = $('form tr td:odd');
-        res.send(JSON.stringify({
-          username: profile.get(0).innerHTML,
-          created: profile.get(1).innerHTML,
-          karma: profile.get(2).innerHTML,
-          average: profile.get(3).innerHTML,
-          about: profile.get(4).innerHTML
-        }));
+        try {
+          res.json({
+            username: profile.get(0).innerHTML,
+            created: profile.get(1).innerHTML,
+            karma: profile.get(2).innerHTML,
+            average: profile.get(3).innerHTML,
+            about: profile.get(4).innerHTML
+          });
+        } catch (_error) {}
       }
     });
   } else {
-    res.send(JSON.stringify({
+    res.json({
       error: 'no userid specified'
-    }));
+    });
   }
 });
 
 api.get('/user/:id/submissions?', function(req, res) {
-  var userid;
+  var html, userid;
+  html = 'http://news.ycombinator.com/submitted?id=';
   userid = req.params.id;
   if (userid !== void 0) {
     jsdom.env({
-      html: 'http://news.ycombinator.com/submitted?id=' + userid,
+      html: html + userid,
       scripts: [jquery_url],
       done: function(errors, window) {
         pageScraper(req, res, errors, window);
       }
     });
   } else {
-    res.send(JSON.stringify({
+    res.json({
       error: 'no userid specified'
-    }));
+    });
   }
 });
 
