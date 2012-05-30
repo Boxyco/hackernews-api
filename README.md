@@ -21,6 +21,17 @@ $ npm install express
 $ npm install jsdom
 ```
 
+####compilation
++ Compiling requires coffeescript, doesn't matter what flavor. If you are using npm:
+```
+$ npm install -g coffee-script
+```
+
++ Compiling
+```
+$ coffee --compile hackernews-api.coffee
+```
+
 ## Author(s)
 
 **Eric Lewis**
