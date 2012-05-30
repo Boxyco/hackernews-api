@@ -33,28 +33,8 @@ api    = require('express').createServer()
 log = (msg) ->
  console.log msg
  return
-
-# ------- redirect / to news
-api.get '/', (req,res) -> 
- res.redirect '/news/'
- return
-
-
-# ------- get news, and get news by pageid
-api.get '/news/:page?', (req,res) -> 
  
- # set the url to be scrap, add the id if provided
- html  = 'http://news.ycombinator.com/'
- page  = req.params.page
- 
- html += 'x?fnid=' if page != undefined and page != 'news2'
- html += page if page != undefined
- 
- # scrap the page now!
- jsdom.env 
-   html: html,
-   scripts:  [ jquery_url ]
-   done: (errors, window) ->
+pageScraper = (req, res, errors, window) ->
     # scrape the links with jquery
     $ = window.$
     links = []
@@ -86,6 +66,30 @@ api.get '/news/:page?', (req,res) ->
                true
     
     return
+
+# ------- redirect / to news
+api.get '/', (req,res) -> 
+ res.redirect '/news/'
+ return
+
+
+# ------- get news, and get news by pageid
+api.get '/news/:page?', (req,res) -> 
+ 
+ # set the url to be scrap, add the id if provided
+ html  = 'http://news.ycombinator.com/'
+ page  = req.params.page
+ 
+ html += 'x?fnid=' if page != undefined and page != 'news2'
+ html += page if page != undefined
+ 
+ # scrap the page now!
+ jsdom.env 
+   html: html,
+   scripts:  [ jquery_url ]
+   done: (errors, window) ->
+   			pageScraper(req, res, errors, window)
+   			return
 	
  return
 
@@ -139,37 +143,8 @@ api.get '/user/:id/submissions?', (req,res) ->
 	   html: html + userid,
 	   scripts:  [ jquery_url ]
 	   done: (errors, window) ->
-		    # scrape the links with jquery
-		    $ = window.$
-		    links = []
-		
-		    $('td.title:not(:last) a').each -> 
-		      item = $(this)
-		      itemSubText = item.parent().parent().next().children '.subtext'
-		      itemLinkText    = item.next().text().trim()
-		
-		      links[links.length] =
-		        href     : if itemLinkText != '' then item.attr 'href' else 'http://news.ycombinator.com/' + item.attr 'href'
-		        title    : item.text()
-		        subtitle : itemSubText.text()
-		        postedby : itemSubText.children('a:eq(0)').text()
-		        site     : if itemLinkText != '' then itemLinkText else '(Hacker News)'
-		        discuss  : 'http://news.ycombinator.com/' + itemSubText.children('a:eq(1)').attr 'href'
-		         
-		      return
-		    
-		
-		    # get the link for the next page
-		    nextPageLink = $('td.title:last a').attr 'href'
-		
-		    res.send JSON.stringify 
-		      links : links,
-		      next  : if nextPageLink == 'news2' then nextPageLink else 
-		              try
-		               nextPageLink.split("=")[1]
-		               true
-		    
-		    return
+   			pageScraper(req, res, errors, window)
+   			return
 	
 	 
  else
