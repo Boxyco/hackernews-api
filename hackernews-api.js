@@ -49,7 +49,7 @@ pageScraper = function(req, res, errors, window) {
       subtitle: itemSubText.text(),
       postedby: itemSubText.children('a:eq(0)').text(),
       site: itemLinkText !== '' ? itemLinkText : '(Hacker News)',
-      discuss: itemSubText.children('a:eq(1)').attr('href').substring(8)
+      discussid: itemSubText.children('a:eq(1)').attr('href').substring(8)
     };
   });
   nextPageLink = $('td.title:last a').attr('href');
@@ -116,6 +116,19 @@ api.get('/news/:page?', function(req, res) {
   });
 });
 
+api.get('/discuss/:id?', function(req, res) {
+  var html, userid;
+  html = 'http://news.ycombinator.com/item?id=';
+  userid = req.params.id;
+  jsdom.env({
+    html: html + userid,
+    scripts: [jquery_url],
+    done: function(errors, window) {
+      commentScraper(req, res, errors, window);
+    }
+  });
+});
+
 api.get('/news/:page?', function(req, res) {
   var html, page;
   html = 'http://news.ycombinator.com/';
@@ -135,10 +148,9 @@ api.get('/news/:page?', function(req, res) {
   });
 });
 
-api.get('/news/ask', function(req, res) {
+api.get('/ask', function(req, res) {
   var html;
   html = 'http://news.ycombinator.com/ask';
-  userid = req.params.id;
   jsdom.env({
     html: html,
     scripts: [jquery_url],
