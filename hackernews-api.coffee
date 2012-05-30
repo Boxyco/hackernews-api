@@ -150,6 +150,11 @@ api.get '/user/:id/submissions?', (req,res) ->
   res.json error: 'no userid specified' 
   
  return
+ 
+api.get '/user/:id/comments', (req,res) ->
+ res.json msg: 'just a holder'
+ 
+ return
 
 # bind the server to the port!
 api.listen listen_port 
