@@ -20,9 +20,8 @@
  * limitations under the License.
  * ==========================================================
 ###
-
 # config(ish), port to bind to, jquery cdn url
-listen_port = 1337
+listen_port =  if process.argv[2] == undefined then 1337 else process.argv[2].substring 2
 jquery_url  = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
 
 # ------- required files
