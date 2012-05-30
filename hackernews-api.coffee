@@ -58,7 +58,7 @@ pageScraper = (req, res, errors, window) ->
     # get the link for the next page
     nextPageLink = $('td.title:last a').attr 'href' 
     	
-    res.send JSON.stringify 
+    res.json 
       links : links,
       next  : if nextPageLink == 'news2' then nextPageLink else 
               try
@@ -112,7 +112,7 @@ api.get '/user/:id?', (req,res) ->
 		   
 		    profile = $('form tr td:odd')
 
-		    res.send JSON.stringify
+		    res.json
 		    	username : profile.get(0).innerHTML
 		    	created  : profile.get(1).innerHTML
 		    	karma    : profile.get(2).innerHTML
@@ -123,7 +123,7 @@ api.get '/user/:id?', (req,res) ->
 	
 	 
  else
-  res.send JSON.stringify error: 'no userid specified'
+  res.json error: 'no userid specified'
   
  return
 
@@ -147,7 +147,7 @@ api.get '/user/:id/submissions?', (req,res) ->
 	
 	 
  else
-  res.send JSON.stringify error: 'no userid specified' 
+  res.json error: 'no userid specified' 
   
  return
 
