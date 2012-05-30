@@ -173,5 +173,6 @@ api.get '/user/:id/submissions?', (req,res) ->
   
  return
 
+# bind the server to the port!
 api.listen listen_port 
 log 'hackernews api running on port ' + listen_port 
