@@ -3,8 +3,7 @@
  * ==========================================================
  * hackernews-api.js v0.1
  * Eric E. Lewis
- * http://ericlewis.github.com
- * requires: node, express, jsdom, and jQuery 1.7+
+ * http://www.boxy.co
  * ===================================================
  * Copyright 2012 boxyco, LLC.
  *
