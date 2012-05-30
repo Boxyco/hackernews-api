@@ -166,7 +166,9 @@ api.get '/user/:id/comments', (req,res) ->
     
     $('td .default > span').each ->
     	comments[comments.length] = 
-    		text: $(this).text()
+    		text     : $(this).text()
+    		indent   : $(this).parent().prev().prev().children('img').attr('width') / 40
+    		postedby : $(this).parent().children('div').children('span').children('a:eq(0)').text()
     	return
     
     res.json comments: comments
