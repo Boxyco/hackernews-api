@@ -63,7 +63,6 @@ pageScraper = (req, res, errors, window) ->
       next  : if nextPageLink == 'news2' then nextPageLink else 
               try
                nextPageLink.split("=")[1]
-               true
     
     return
 
