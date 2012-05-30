@@ -161,9 +161,15 @@ api.get '/user/:id/comments', (req,res) ->
    html: html + userid,
    scripts:  [ jquery_url ]
    done: (errors, window) ->
+    $ = window.$
+    comments = []
+    
     $('td .default > span').each ->
-    	console.log($(this).text())
+    	comments[comments.length] = 
+    		text: $(this).text()
     	return
+    
+    res.json comments: comments
     return
    				
  return
