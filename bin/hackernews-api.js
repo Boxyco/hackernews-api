@@ -51,24 +51,18 @@
         };
       });
       if (comments.length > 0) {
-        res.json({
-          comments: comments,
-          requestTime: new Date(),
-          version: version
-        }, 200);
+        return {
+          comments: comments
+        };
       } else {
-        res.json({
-          error: 'no comments found',
-          requestTime: new Date(),
-          version: version
-        }, 404);
+        return error('no comments found');
       }
     },
     pageScraper: function(req, res, errors, window) {
       var $, links, nextPageLink;
       $ = window.$;
       links = [];
-      $('td.title:not(:last) a').each(function() {
+      $('td.title a[rel!="nofollow"]').each(function() {
         var item, itemLinkText, itemSubText, _ref;
         item = $(this);
         itemSubText = item.parent().parent().next().children('.subtext');
@@ -87,18 +81,14 @@
       nextPageLink = $('td.title:last a').attr('href');
       nextPageLink = nextPageLink !== 'news2' ? nextPageLink.split('=')[1] : nextPageLink;
       if (links.length > 0) {
-        res.json({
+        return {
           links: links,
-          nextId: nextPageLink,
-          requestTime: new Date(),
-          version: version
-        }, 200);
+          nextId: nextPageLink
+        };
       } else {
-        res.json({
-          error: 'no links found',
-          requestTime: new Date(),
-          version: version
-        }, 404);
+        return {
+          error: 'no links found'
+        };
       }
     },
     profileScraper: function(req, res, errors, window) {
@@ -132,8 +122,16 @@
       html: "" + html + thread,
       scripts: [config.server.jquery_url],
       done: function(errors, window) {
+        var comments, post;
         try {
-          tools.commentScraper(req, res, errors, window);
+          post = tools.pageScraper(req, res, errors, window);
+          comments = tools.commentScraper(req, res, errors, window);
+          res.json({
+            post: post.links,
+            comments: comments.comments,
+            requestTime: new Date(),
+            version: version
+          });
         } catch (err) {
           res.json({
             error: 'invalid id',
@@ -153,8 +151,14 @@
       html: html,
       scripts: [config.server.jquery_url],
       done: function(errors, window) {
+        var post;
         try {
-          tools.profileScraper(req, res, errors, window);
+          post = tools.pageScraper(req, res, errors, window);
+          res.json({
+            links: post.links,
+            requestTime: new Date(),
+            version: version
+          });
         } catch (err) {
           res.json({
             error: 'invalid username',
@@ -174,8 +178,14 @@
       html: "" + html + userid,
       scripts: [config.server.jquery_url],
       done: function(errors, window) {
+        var comments;
         try {
-          tools.commentScraper(req, res, errors, window);
+          comments = tools.commentScraper(req, res, errors, window);
+          res.json({
+            comments: comments.comments,
+            requestTime: new Date(),
+            version: version
+          });
         } catch (err) {
           res.json({
             error: 'invalid id',
@@ -195,8 +205,14 @@
       html: "" + html + userid,
       scripts: [config.server.jquery_url],
       done: function(errors, window) {
+        var post;
         try {
-          tools.pageScraper(req, res, errors, window);
+          post = tools.pageScraper(req, res, errors, window);
+          res.json({
+            links: post.links,
+            requestTime: new Date(),
+            version: version
+          });
         } catch (err) {
           res.json({
             error: 'invalid username',
@@ -217,8 +233,14 @@
       html: html,
       scripts: [config.server.jquery_url],
       done: function(errors, window) {
+        var post;
         try {
-          tools.pageScraper(req, res, errors, window);
+          post = tools.pageScraper(req, res, errors, window);
+          res.json({
+            links: post.links,
+            requestTime: new Date(),
+            version: version
+          });
         } catch (err) {
           res.json({
             error: 'invalid nextId',
