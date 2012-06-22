@@ -47,17 +47,15 @@ tools =
 				postedAgo : childspan.children('a').remove() and parent.children('div').children('span').text().substring(0,15).trim()
 			return
 		
-		if comments.length > 0 then res.json comments: comments, requestTime: new Date(), version:version, 200 else res.json error: 'no comments found', requestTime: new Date(), version:version,  404
-			
-		return
-		
+		if comments.length > 0 then comments: comments else error 'no comments found'
+					
 		
 	pageScraper : (req, res, errors, window) ->
 	    # scrape the links with jquery
 	    $ = window.$
 	    links = []
 	
-	    $('td.title:not(:last) a').each -> 
+	    $('td.title a[rel!="nofollow"]').each -> 
 	      item = $(this)
 	      itemSubText = item.parent().parent().next().children '.subtext'
 	      itemLinkText    = item.next().text().trim()
@@ -79,9 +77,8 @@ tools =
 	    nextPageLink = $('td.title:last a').attr('href')
 	    nextPageLink = if nextPageLink != 'news2' then nextPageLink.split('=')[1] else nextPageLink
 	    
-	    if links.length > 0 then res.json links: links, nextId: nextPageLink, requestTime: new Date(), version:version,  200 else res.json error: 'no links found', requestTime: new Date(), version:version,  404
+	    if links.length > 0 then links: links, nextId: nextPageLink else error: 'no links found'
 	    
-	    return
 	    
 	 profileScraper: (req, res, errors, window) ->
 	 	# scrape the links with jquery
@@ -95,10 +92,9 @@ tools =
 	    	createdAgo : item.get(1).innerHTML
 	    	karma	   : parseInt item.get(2).innerHTML
 	    
-	    res.json profile: profile, requestTime: new Date(),  version:version, 200
+	    profile: profile
 	    
-	    return  
-
+	    
 # allow any access origin	    
 server.get '/*', (req,res,next) ->
     res.header 'Access-Control-Allow-Origin' , '*'
@@ -116,7 +112,10 @@ server.get '/discuss/:id?', (req, res) ->
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.commentScraper req, res, errors, window
+				post = tools.pageScraper req, res, errors, window 
+				comments = tools.commentScraper req, res, errors, window
+				
+				res.json {post: post.links, comments: comments.comments, requestTime: new Date(), version:version}
 			catch err
 				res.json error: 'invalid id', requestTime: new Date(), version:version,  404
 			return
@@ -130,7 +129,9 @@ server.get '/profile/:userid?', (req, res) ->
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.profileScraper req, res, errors, window
+				profile = tools.profileScraper req, res, errors, window 
+				
+				res.json {profile: profile.profile, requestTime: new Date(), version:version}
 			catch err
 				res.json error: 'invalid username', requestTime: new Date(), version:version,  404
 			return	
@@ -146,7 +147,9 @@ server.get '/profile/:id/comments?', (req, res) ->
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.commentScraper req, res, errors, window
+				comments = tools.commentScraper req, res, errors, window
+				
+				res.json {comments: comments.comments, requestTime: new Date(), version:version}
 			catch err
 				res.json error: 'invalid id', requestTime: new Date(), version:version,  404
 			return		
@@ -162,7 +165,9 @@ server.get '/profile/:id/submissions?/:page?', (req, res) ->
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.pageScraper req, res, errors, window
+				post = tools.pageScraper req, res, errors, window 
+				
+				res.json {links: post.links, requestTime: new Date(), version:version}
 			catch err
 				res.json error: 'invalid username', requestTime: new Date(), version:version,  404
 			return		
@@ -181,7 +186,9 @@ server.get '/:root/:page?', (req,res) ->
    scripts:  [ config.server.jquery_url ]
    done: (errors, window) ->
    			try
-   				tools.pageScraper req, res, errors, window
+   				post = tools.pageScraper req, res, errors, window
+   				
+   				res.json {links: post.links, requestTime: new Date(), version:version}
    			catch err
    				res.json error: 'invalid nextId', requestTime: new Date(), version:version, 404
    			return		
