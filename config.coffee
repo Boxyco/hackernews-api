@@ -22,6 +22,7 @@
 
 config = 
 	server :
+		version     : 0.2
 		listen_port	: 1337
 		base_url	: 'http://news.ycombinator.com/'
 		jquery_url	: 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'

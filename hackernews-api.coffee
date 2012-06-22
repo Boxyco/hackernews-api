@@ -25,6 +25,8 @@ server = require('express').createServer()
 
 config = require('./config')
 
+version = config.server.version
+
 #
 # Functions
 #
@@ -45,7 +47,7 @@ tools =
 				postedAgo : childspan.children('a').remove() and parent.children('div').children('span').text().substring(0,15).trim()
 			return
 		
-		if comments.length > 0 then res.json comments: comments, requestTime: new Date(), 200 else res.json error: 'no comments found', requestTime: new Date(), 404
+		if comments.length > 0 then res.json comments: comments, requestTime: new Date(), version:version,  200 else res.json error: 'no comments found', requestTime: new Date(), version:version,  404
 		
 		return
 		
@@ -76,7 +78,7 @@ tools =
 	    nextPageLink = $('td.title:last a').attr('href')
 	    nextPageLink = if nextPageLink != 'news2' then nextPageLink.split('=')[1] else nextPageLink
 	    
-	    if links.length > 0 then res.json links: links, nextId: nextPageLink, requestTime: new Date(), 200 else res.json error: 'no links found', requestTime: new Date(), 404
+	    if links.length > 0 then res.json links: links, nextId: nextPageLink, requestTime: new Date(), version:version,  200 else res.json error: 'no links found', requestTime: new Date(), version:version,  404
 	    
 	    return
 	    
@@ -92,7 +94,7 @@ tools =
 	    	createdAgo : item.get(1).innerHTML
 	    	karma	   : parseInt item.get(2).innerHTML
 	    
-	    res.json profile: profile, requestTime: new Date(), 200
+	    res.json profile: profile, requestTime: new Date(),  version:version, 200
 	    
 	    return  
 		
@@ -110,7 +112,7 @@ server.get '/discuss/:id?', (req, res) ->
 			try
 				tools.commentScraper
 			catch err
-				res.json error: 'invalid id', requestTime: new Date(), 404
+				res.json error: 'invalid id', requestTime: new Date(),  version:version, 404
 			return
 			
 server.get '/profile/:userid?', (req, res) ->
@@ -124,7 +126,7 @@ server.get '/profile/:userid?', (req, res) ->
 			try
 				tools.profileScraper req, res, errors, window
 			catch err
-				res.json error: 'invalid username', requestTime: new Date(), 404
+				res.json error: 'invalid username', requestTime: new Date(), version:version,  404
 			return	
 						
 server.get '/profile/:id/comments?', (req, res) ->
@@ -140,7 +142,7 @@ server.get '/profile/:id/comments?', (req, res) ->
 			try
 				tools.commentScraper
 			catch err
-				res.json error: 'invalid id', requestTime: new Date(), 404
+				res.json error: 'invalid id', requestTime: new Date(), version:version,  404
 			return		
 
 server.get '/profile/:id/submissions?/:nextId?', (req, res) ->
@@ -156,9 +158,9 @@ server.get '/profile/:id/submissions?/:nextId?', (req, res) ->
 			try
 				tools.pageScraper
 			catch err
-				res.json error: 'invalid username', requestTime: new Date(), 404
+				res.json error: 'invalid username', requestTime: new Date(), version:version,  404
 			return		
-			
+   			
 server.get '/:root/:page?', (req,res) -> 
  
  # set the url to be scrap, add the id if provided
@@ -175,10 +177,11 @@ server.get '/:root/:page?', (req,res) ->
    			try
    				tools.pageScraper req, res, errors, window
    			catch err
-   				res.json error: 'invalid nextId', requestTime: new Date(), 404
+   				res.json error: 'invalid nextId', requestTime: new Date(), version:version, 404
    			return		
 
-
+server.get '*', (req, res)->
+	res.json error:'could not find a related method', requestTime: new Date(), version:version, 404
 
 # ------- bind server
 server.listen config.server.listen_port 
