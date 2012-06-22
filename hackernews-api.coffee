@@ -143,7 +143,7 @@ server.get '/profile/:id/comments?', (req, res) ->
 				res.json error: 'invalid id', requestTime: new Date(), 404
 			return		
 
-server.get '/profile/:id/submissions?', (req, res) ->
+server.get '/profile/:id/submissions?/:nextId?', (req, res) ->
 	# set the url to be scrap, add the id if provided
 	html  = "#{config.server.base_url}submitted?id="
 	userid  = req.params.id

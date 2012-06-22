@@ -1,15 +1,52 @@
 # Hacker News API
 
 RESTful http://news.ycombinator.com API written in Coffeescript for node.js, utilizing jQuery, JsDOM, and express.
-####live demo url:
-http://hnapi.boxy.co:1337
 
-## Routes
+## API Url Examples
 ### Retrieve Front Page News
 	URL: http://localhost:1337/news or http://localhost:1337/news/{nextId}
 	Method: GET
 	Returns: nextId: ID for next page of links
 	items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}
+	
+### Retrieve Jobs
+	URL: http://localhost:1337/jobs or http://localhost:1337/jobs/{nextId}
+	Method: GET
+	Returns: nextId: ID for next page of links
+	items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}	
+
+### Retrieve Newest Posts
+	URL: http://localhost:1337/newest or http://localhost:1337/newest/{nextId}
+	Method: GET
+	Returns: nextId: ID for next page of links
+	items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}	
+	
+### Retrieve Ask HN Posts
+	URL: http://localhost:1337/ask or http://localhost:1337/ask/{nextId}
+	Method: GET
+	Returns: nextId: ID for next page of links
+	items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}	
+	
+### Retrieve Post Comments
+	URL: http://localhost:1337/discuss/{id}
+	Method: GET
+	Returns: array of comments {indent, comment, postedAgo, postedBy}
+
+### Retrieve a user's profile
+	URL: http://localhost:1337/profile/{username}
+	Method: GET
+	Returns: about, createdAgo, karma, username
+	
+### Retrieve Posts Submitted By User
+	URL: http://localhost:1337/profile/{username}/submissions/{nextId}
+	Method: GET
+	Returns: nextId: ID for next page of links
+	items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}
+	
+### Retrieve Comment Threads for a user
+	URL: http://localhost:1337/profile/{username}/comments
+	Method: GET
+	Returns: array of comments {indent, comment, postedAgo, postedBy}
 
 
 ## Developers
