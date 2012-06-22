@@ -236,6 +236,7 @@
           post = tools.pageScraper(req, res, errors, window);
           res.json({
             links: post.links,
+            nextId: post.nextId,
             requestTime: new Date(),
             version: version
           });
