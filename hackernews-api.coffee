@@ -70,6 +70,7 @@ tools =
 	        postedAgo 	 : itemSubText.text().split(' ').slice(4,-4).join(' ')
 	        commentCount : parseInt itemSubText.children('a:eq(1)').text().split(' ')[0]
 	        id   	     : parseInt itemSubText.children('a:eq(1)').attr('href')?.substring 8
+	        site		 : if item.attr('href').indexOf('http') is 0 then item.parent().children('span').text().trim() else "(ycombinator.com)"
 	
 	      return
 	    

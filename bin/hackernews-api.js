@@ -80,7 +80,8 @@
           postedBy: itemSubText.children('a:eq(0)').text(),
           postedAgo: itemSubText.text().split(' ').slice(4, -4).join(' '),
           commentCount: parseInt(itemSubText.children('a:eq(1)').text().split(' ')[0]),
-          id: parseInt((_ref = itemSubText.children('a:eq(1)').attr('href')) != null ? _ref.substring(8) : void 0)
+          id: parseInt((_ref = itemSubText.children('a:eq(1)').attr('href')) != null ? _ref.substring(8) : void 0),
+          site: item.attr('href').indexOf('http') === 0 ? item.parent().children('span').text().trim() : "(ycombinator.com)"
         };
       });
       nextPageLink = $('td.title:last a').attr('href');
