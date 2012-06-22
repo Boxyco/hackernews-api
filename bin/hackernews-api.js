@@ -101,11 +101,9 @@
         createdAgo: item.get(1).innerHTML,
         karma: parseInt(item.get(2).innerHTML)
       };
-      res.json({
-        profile: profile,
-        requestTime: new Date(),
-        version: version
-      }, 200);
+      return {
+        profile: profile
+      };
     }
   };
 
@@ -151,11 +149,11 @@
       html: html,
       scripts: [config.server.jquery_url],
       done: function(errors, window) {
-        var post;
+        var profile;
         try {
-          post = tools.pageScraper(req, res, errors, window);
+          profile = tools.profileScraper(req, res, errors, window);
           res.json({
-            links: post.links,
+            profile: profile.profile,
             requestTime: new Date(),
             version: version
           });
