@@ -4,12 +4,12 @@ RESTful http://news.ycombinator.com API written in Coffeescript for node.js, uti
 ####live demo url:
 http://hnapi.boxy.co:1337
 
-## Examples
-+ frontpage: http://localhost:1337/news
-+ next page: http://localhost:1337/news/pageid
-+ user profile: http://localhost:1337/user/username
-+ user submissions: http://localhost:1337/user/username/submissions
-+ user comments: http://localhost:1337/user/username/comments
+## Routes
+### Retrieve Front Page News
+#### URL: http://localhost:1337/news or http://localhost:1337/news/{nextId}
+#### Method: GET
+#### Returns: nextId: ID for next page of links
+#### items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}
 
 
 ## Developers
