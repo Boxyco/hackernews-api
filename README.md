@@ -6,10 +6,10 @@ http://hnapi.boxy.co:1337
 
 ## Routes
 ### Retrieve Front Page News
-#### URL: http://localhost:1337/news or http://localhost:1337/news/{nextId}
-#### Method: GET
-#### Returns: nextId: ID for next page of links
-#### items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}
+	URL: http://localhost:1337/news or http://localhost:1337/news/{nextId}
+	Method: GET
+	Returns: nextId: ID for next page of links
+	items: array of links {commentCount, id, points, postedAgo, postedBy, title, url}
 
 
 ## Developers
