@@ -34,12 +34,12 @@ tools =
 	commentScraper : (req, res, errors, window) ->
 		$ = window.$
 		
-		comments = []				
+		comments = []	
 		
 		$('td .default > span').each ->
 			parent = $(this).parent()
 			childspan = parent.children('div').children('span')
-			
+
 			comments[comments.length] = 
 				comment   : $(this).children('font').html()
 				indent    : parseInt parent.prev().prev().children('img').attr('width') / 40
@@ -47,8 +47,8 @@ tools =
 				postedAgo : childspan.children('a').remove() and parent.children('div').children('span').text().substring(0,15).trim()
 			return
 		
-		if comments.length > 0 then res.json comments: comments, requestTime: new Date(), version:version,  200 else res.json error: 'no comments found', requestTime: new Date(), version:version,  404
-		
+		if comments.length > 0 then res.json comments: comments, requestTime: new Date(), version:version, 200 else res.json error: 'no comments found', requestTime: new Date(), version:version,  404
+			
 		return
 		
 		
@@ -97,6 +97,11 @@ tools =
 	    res.json profile: profile, requestTime: new Date(),  version:version, 200
 	    
 	    return  
+
+# allow any access origin	    
+server.get '/*', (req,res,next) ->
+    res.header 'Access-Control-Allow-Origin' , '*'
+    next()
 		
 # ------- get post comments by discuss id
 server.get '/discuss/:id?', (req, res) ->
@@ -110,9 +115,9 @@ server.get '/discuss/:id?', (req, res) ->
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.commentScraper
+				tools.commentScraper req, res, errors, window
 			catch err
-				res.json error: 'invalid id', requestTime: new Date(),  version:version, 404
+				res.json error: 'invalid id', requestTime: new Date(), version:version,  404
 			return
 			
 server.get '/profile/:userid?', (req, res) ->
@@ -136,16 +141,16 @@ server.get '/profile/:id/comments?', (req, res) ->
 	
 	# scrap the page now!
 	jsdom.env 
-		html: "#{html}#{id}",
+		html: "#{html}#{userid}",
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.commentScraper
+				tools.commentScraper req, res, errors, window
 			catch err
 				res.json error: 'invalid id', requestTime: new Date(), version:version,  404
 			return		
 
-server.get '/profile/:id/submissions?/:nextId?', (req, res) ->
+server.get '/profile/:id/submissions?/:page?', (req, res) ->
 	# set the url to be scrap, add the id if provided
 	html  = "#{config.server.base_url}submitted?id="
 	userid  = req.params.id
@@ -156,7 +161,7 @@ server.get '/profile/:id/submissions?/:nextId?', (req, res) ->
 		scripts:  [ config.server.jquery_url ]
 		done: (errors, window) ->
 			try
-				tools.pageScraper
+				tools.pageScraper req, res, errors, window
 			catch err
 				res.json error: 'invalid username', requestTime: new Date(), version:version,  404
 			return		
