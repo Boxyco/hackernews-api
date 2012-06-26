@@ -30,6 +30,7 @@ version = config.server.version
 #
 # Functions
 #
+
 tools =
 	commentScraper : (req, res, errors, window) ->
 		$ = window.$
@@ -54,7 +55,10 @@ tools =
 	    # scrape the links with jquery
 	    $ = window.$
 	    links = []
-	
+	    scraper = new Scraper('',$)
+	    
+	    console.log scraper.parseObject({ title:'td.title a:eq(0)', url:'td.title:a'})
+		
 	    $('td.title a[rel!="nofollow"]').each -> 
 	      item = $(this)
 	      itemSubText = item.parent().parent().next().children '.subtext'
@@ -63,9 +67,9 @@ tools =
 	      links[links.length] =
 	        url          : if item.attr('href').indexOf('http') is 0 then item.attr('href') else "#{config.server.base_url}#{item.attr 'href'}"
 	        title        : item.text()
-	        points    	 : parseInt itemSubText.children('span').text().split(' ')[0]
+	        points    	 : parseInt(/(\d+) \w+/.exec(itemSubText.text())[1])
 	        postedBy   	 : itemSubText.children('a:eq(0)').text()
-	        postedAgo 	 : itemSubText.text().split(' ').slice(4,-4).join(' ')
+	        postedAgo 	 : /[0-9]+ \w+ ago/.exec(itemSubText.text())[0]
 	        commentCount : parseInt itemSubText.children('a:eq(1)').text().split(' ')[0]
 	        id   	     : parseInt itemSubText.children('a:eq(1)').attr('href')?.substring 8
 	        site		 : if item.attr('href').indexOf('http') is 0 then item.parent().children('span').text().trim() else "(ycombinator.com)"
@@ -99,6 +103,17 @@ tools =
 server.get '/*', (req,res,next) ->
     res.header 'Access-Control-Allow-Origin' , '*'
     next()
+
+# get article / post text in JSON format
+server.get '/post/text', (req,res) ->
+		
+	# require the request lib
+	request = require 'request' 
+	
+	# get the json, and pass it on.
+	request "http://viewtext.org/api/text?url=#{req.query['url']}&format=json", (error, response, body) ->
+		content = JSON.parse(body)
+		if !error and response.statusCode is 200 then res.send {article: content, requestTime: new Date(), version:version}  else res.send error: 'invalid url', requestTime: new Date(), version:version
 		
 # ------- get post comments by discuss id
 server.get '/discuss/:id?', (req, res) ->
@@ -171,7 +186,10 @@ server.get '/profile/:id/submissions?/:page?', (req, res) ->
 			catch err
 				res.json error: 'invalid username', requestTime: new Date(), version:version,  404
 			return		
-   			
+			
+server.get '/test', (req, res) ->
+
+    	        
 server.get '/:root/:page?', (req,res) -> 
  
  # set the url to be scrap, add the id if provided
@@ -188,7 +206,7 @@ server.get '/:root/:page?', (req,res) ->
    			try
    				post = tools.pageScraper req, res, errors, window
    				
-   				res.json {links: post.links, requestTime: new Date(), version:version}
+   				res.json {links: post.links, nextId:post.nextId, requestTime: new Date(), version:version}
    			catch err
    				res.json error: 'invalid nextId', requestTime: new Date(), version:version, 404
    			return		

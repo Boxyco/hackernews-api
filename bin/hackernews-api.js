@@ -59,9 +59,14 @@
       }
     },
     pageScraper: function(req, res, errors, window) {
-      var $, links, nextPageLink;
+      var $, links, nextPageLink, scraper;
       $ = window.$;
       links = [];
+      scraper = new Scraper('', $);
+      console.log(scraper.parseObject({
+        title: 'td.title a:eq(0)',
+        url: 'td.title:a'
+      }));
       $('td.title a[rel!="nofollow"]').each(function() {
         var item, itemLinkText, itemSubText, _ref;
         item = $(this);
@@ -70,9 +75,9 @@
         links[links.length] = {
           url: item.attr('href').indexOf('http') === 0 ? item.attr('href') : "" + config.server.base_url + (item.attr('href')),
           title: item.text(),
-          points: parseInt(itemSubText.children('span').text().split(' ')[0]),
+          points: parseInt(/(\d+) \w+/.exec(itemSubText.text())[1]),
           postedBy: itemSubText.children('a:eq(0)').text(),
-          postedAgo: itemSubText.text().split(' ').slice(4, -4).join(' '),
+          postedAgo: /[0-9]+ \w+ ago/.exec(itemSubText.text())[0],
           commentCount: parseInt(itemSubText.children('a:eq(1)').text().split(' ')[0]),
           id: parseInt((_ref = itemSubText.children('a:eq(1)').attr('href')) != null ? _ref.substring(8) : void 0),
           site: item.attr('href').indexOf('http') === 0 ? item.parent().children('span').text().trim() : "(ycombinator.com)"
@@ -110,6 +115,28 @@
   server.get('/*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     return next();
+  });
+
+  server.get('/post/text', function(req, res) {
+    var request;
+    request = require('request');
+    return request("http://viewtext.org/api/text?url=" + req.query['url'] + "&format=json", function(error, response, body) {
+      var content;
+      content = JSON.parse(body);
+      if (!error && response.statusCode === 200) {
+        return res.send({
+          article: content,
+          requestTime: new Date(),
+          version: version
+        });
+      } else {
+        return res.send({
+          error: 'invalid url',
+          requestTime: new Date(),
+          version: version
+        });
+      }
+    });
   });
 
   server.get('/discuss/:id?', function(req, res) {
@@ -221,6 +248,8 @@
       }
     });
   });
+
+  server.get('/test', function(req, res) {});
 
   server.get('/:root/:page?', function(req, res) {
     var html, page, root;
