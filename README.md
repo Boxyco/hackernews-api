@@ -50,7 +50,7 @@ RESTful http://news.ycombinator.com API written in Coffeescript for node.js, uti
 
 
 ## Developers
-####Node.js dependencies
+#### Node.js dependencies
 + Our script depends on jsdom and express. To install, just run the following command while in the directory:
 
 ```
@@ -58,7 +58,7 @@ $ npm install
 ```
 
 
-####Compiling Instructions
+#### Compiling Instructions
 + Compiling requires coffeescript, doesn't matter what flavor. If you are using npm:
 ```
 $ npm install -g coffee-script
